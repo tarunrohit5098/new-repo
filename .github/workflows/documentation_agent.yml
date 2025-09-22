@@ -28,8 +28,10 @@ jobs:
       # Step 3: Get the code changes (the "diff")
       - name: Get code diff
         id: git_diff
-        # This command gets the changes between the last push and the one before it
-        run: echo "DIFF=$(git diff ${{ github.event.before }} ${{ github.event.after }})" >> $GITHUB_ENV
+        run: |
+          echo 'DIFF<<EOF' >> $GITHUB_ENV
+          git diff ${{ github.event.before }} ${{ github.event.after }} >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       # Step 4: Run the AI agent script
       - name: Generate documentation with Gemini
