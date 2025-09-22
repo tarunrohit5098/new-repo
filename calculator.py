@@ -14,9 +14,14 @@ class SimpleCalculator:
         """Returns the difference of two numbers."""
         return x - y
 
-    def multiply(self, x, y):
-        """Returns the product of two numbers."""
-        return x * y
+    def percentage(self, x, y):
+        """
+        Returns the percentage of x with respect to y.
+        For example, percentage(50, 200) returns 25.0
+        """
+        if y == 0:
+            return "Error: Cannot calculate percentage with denominator zero."
+        return (x / y) * 100
 
     def divide(self, x, y):
         """
