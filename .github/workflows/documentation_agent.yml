@@ -3,20 +3,17 @@ name: AI Documentation Agent 🤖
 on:
   push:
     branches:
-      - main # Or any branch you want to monitor
+      - main
 
 jobs:
   document_changes:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out the code so the action can access it
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # We need to fetch the full history to be able to compare commits
           fetch-depth: 0
 
-      # Step 2: Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -25,7 +22,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Step 3: Get the code changes (the "diff")
       - name: Get code diff
         id: git_diff
         run: |
@@ -33,13 +29,13 @@ jobs:
           git diff ${{ github.event.before }} ${{ github.event.after }} >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      # Step 4: Run the AI agent script
+      # This step is now updated
       - name: Generate documentation with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python generate_docs.py "${{ env.DIFF }}"
+          CODE_DIFF: ${{ env.DIFF }} # Pass the diff as an env variable here
+        run: python generate_docs.py # No more command-line argument
 
-      # Step 5: Commit the new documentation file back to the repo
       - name: Commit documentation
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

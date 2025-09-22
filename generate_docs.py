@@ -8,12 +8,15 @@ if not api_key:
     raise ValueError("GEMINI_API_KEY is not set in the environment.")
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash') # Using the fast and efficient model
+model = genai.GenerativeModel('gemini-1.5-flash')
 
-# Get the code diff passed from the GitHub Action
-code_diff = sys.argv[1]
+# Get the code diff from the environment variable (this is the change)
+code_diff = os.environ.get("CODE_DIFF")
+if not code_diff:
+    print("Error: CODE_DIFF environment variable not found or is empty.")
+    sys.exit(1)
 
-# This is the magic! A well-crafted prompt for the AI.
+# The prompt remains the same
 prompt = f"""
 Based on the following code changes (git diff), please act as an expert technical writer and generate clear documentation in Markdown format.
 
