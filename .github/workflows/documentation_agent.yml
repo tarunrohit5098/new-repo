@@ -8,6 +8,11 @@ on:
 jobs:
   document_changes:
     runs-on: ubuntu-latest
+
+    # Add this permissions block to allow the action to push code
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,12 +34,11 @@ jobs:
           git diff ${{ github.event.before }} ${{ github.event.after }} >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      # This step is now updated
       - name: Generate documentation with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          CODE_DIFF: ${{ env.DIFF }} # Pass the diff as an env variable here
-        run: python generate_docs.py # No more command-line argument
+          CODE_DIFF: ${{ env.DIFF }}
+        run: python generate_docs.py
 
       - name: Commit documentation
         uses: stefanzweifel/git-auto-commit-action@v5
