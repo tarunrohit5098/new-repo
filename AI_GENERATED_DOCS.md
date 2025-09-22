@@ -1,49 +1,31 @@
-# Release Notes: Improved Greeting and Calculator Module Added
+# SimpleCalculator Update: Percentage Calculation
 
 ## Summary of Changes
 
-This release includes two significant changes:
+This update introduces a new functionality to the `SimpleCalculator` class: percentage calculation.  The `multiply` function has been removed. The new `percentage` function allows users to calculate the percentage of one number with respect to another, handling the case of a zero denominator gracefully.
 
-1.  **Improved `greet_user` function:** The `greet_user` function in `app.py` has been enhanced to handle invalid input more gracefully and its internal logic was changed from f-string to string concatenation.  It now explicitly checks for empty or non-string inputs, returning a more appropriate default message.
-
-2.  **New `calculator.py` module:** A new module, `calculator.py`, has been added. This module contains the `SimpleCalculator` class, providing basic arithmetic operations (addition, subtraction, multiplication, and division).  The `divide` method includes error handling for division by zero.
 
 ## New Features / Fixes
 
-*   **Improved Error Handling in `greet_user`:** The `greet_user` function now correctly handles cases where the input `name` is either empty or not a string.
-*   **Added `SimpleCalculator` class:**  A new class, `SimpleCalculator`, provides methods for basic arithmetic operations (add, subtract, multiply, divide).
-*   **Division by Zero Handling:** The `divide` method in `SimpleCalculator` includes error handling for division by zero, returning an informative error message instead of crashing.
-*   **Changed `greet_user` internal logic:** The internal logic of the `greet_user` function was changed from f-string to string concatenation for better readability and maintainability.
+*   **Added:** `percentage(self, x, y)` method to calculate the percentage of `x` with respect to `y`.  The function returns a float representing the percentage or an error message if `y` is zero.
+*   **Removed:** `multiply(self, x, y)` method.
+
 
 ## How to Use
 
-**Using the `SimpleCalculator` class:**
+The new `percentage` method can be used as follows:
 
 ```python
 from calculator import SimpleCalculator
 
-calculator = SimpleCalculator()
+calc = SimpleCalculator()
 
-# Perform calculations
-addition_result = calculator.add(5, 3)  # Result: 8
-subtraction_result = calculator.subtract(10, 4)  # Result: 6
-multiplication_result = calculator.multiply(7, 2)  # Result: 14
-division_result = calculator.divide(15, 3)  # Result: 5.0
-division_by_zero_result = calculator.divide(10, 0)  # Result: "Error: Cannot divide by zero."
+# Calculate 50% of 200
+result = calc.percentage(50, 200)
+print(f"50% of 200 is: {result}")  # Output: 25.0
 
-print(f"Addition: {addition_result}")
-print(f"Subtraction: {subtraction_result}")
-print(f"Multiplication: {multiplication_result}")
-print(f"Division: {division_result}")
-print(f"Division by zero: {division_by_zero_result}")
-```
+# Handle zero denominator
+result = calc.percentage(10, 0)
+print(f"Percentage calculation with zero denominator: {result}") # Output: Error: Cannot calculate percentage with denominator zero.
 
-**Using the updated `greet_user` function:**
-
-```python
-from app import greet_user
-
-print(greet_user("Alice"))  # Output: Hello, Alice! Welcome.
-print(greet_user(""))       # Output: Hello, guest!
-print(greet_user(123))      # Output: Hello, guest!
 ```
