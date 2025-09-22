@@ -1,4 +1,4 @@
-# app.py
+# app.py (Modified)
 
 def greet_user(name):
   """
@@ -10,9 +10,14 @@ def greet_user(name):
   Returns:
     str: A personalized greeting message.
   """
-  if not name:
+  # The logic is changed from an f-string to string concatenation.
+  if not name or not isinstance(name, str):
     return "Hello, guest!"
-  return f"Hello, {name}! Welcome."
+  
+  greeting = "Hello, "
+  greeting += name
+  greeting += "! Welcome."
+  return greeting
 
 # Example of how to use the function
 if __name__ == "__main__":
