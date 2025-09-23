@@ -1,15 +1,15 @@
-name: AI Documentation Agent 🤖
+name: AI Documentation System 🚀
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize] # Runs on PR creation and updates
 
 jobs:
-  document_changes:
+  generate_advanced_docs:
     runs-on: ubuntu-latest
-
-    # Add this permissions block to allow the action to push code
     permissions:
       contents: write
 
@@ -27,6 +27,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Get commit hash
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Create documentation directory
+        run: mkdir -p docs/${{ steps.vars.outputs.sha_short }}
+
       - name: Get code diff
         id: git_diff
         run: |
@@ -34,16 +41,16 @@ jobs:
           git diff ${{ github.event.before }} ${{ github.event.after }} >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
 
-      - name: Generate documentation with Gemini
+      - name: Generate all documentation with Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CODE_DIFF: ${{ env.DIFF }}
-        run: python generate_docs.py
+        run: python generate_docs.py ${{ steps.vars.outputs.sha_short }}
 
-      - name: Commit documentation
+      - name: Commit all new documentation
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "docs: ✨ AI-generated documentation for new changes"
-          file_pattern: "AI_GENERATED_DOCS.md"
+          commit_message: "docs: 📝 AI-generated docs for commit ${{ steps.vars.outputs.sha_short }}"
+          file_pattern: "docs/"
           commit_user_name: "AI Documentation Bot"
           commit_user_email: "ai-bot@users.noreply.github.com"
